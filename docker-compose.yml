@@ -1,0 +1,59 @@
+networks:
+  Prodigy:
+    external: true
+
+services:
+  cerberus:
+    build:
+      context: .
+      dockerfile: Cerberus
+    container_name: Cerberus
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - CERBERUS_DB_HOST=${DB_HOST:-db}
+      - CERBERUS_DB_PORT=${DB_PORT:-5432}
+      - CERBERUS_DB_NAME=${DB_NAME:-prodigydb}
+      - CERBERUS_DB_USER=${DB_USER:-prodigyuser}
+      - CERBERUS_DB_PASSWORD=${DB_PASSWORD:-dbpassword}
+    depends_on:
+      - db
+    networks:
+      - Prodigy
+  prodigy:
+    container_name: prodigy
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PRODIGY_USERNAME=admin
+      - PRODIGY_PASSWORD=securepassword
+      - PRODIGY_DB_HOST=db
+      - PRODIGY_DB_PORT=5432
+      - PRODIGY_DB_NAME=prodigydb
+      - PRODIGY_DB_USER=prodigyuser
+      - PRODIGY_DB_PASSWORD=dbpassword
+    depends_on:
+      - db
+    networks:
+      - Prodigy
+  db:
+    image: postgres:13
+    container_name: prodigy_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=prodigydb
+      - POSTGRES_USER=prodigyuser
+      - POSTGRES_PASSWORD=dbpassword
+    volumes:
+      - prodigy_db_data:/var/lib/postgresql/data
+    networks:
+      - Prodigy
+volumes:
+  prodigy_db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /path/to/local/directory
+      o: bind
