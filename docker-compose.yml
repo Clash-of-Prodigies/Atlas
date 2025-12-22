@@ -17,6 +17,13 @@ services:
       - CERBERUS_DB_NAME=${DB_NAME}
       - CERBERUS_DB_USER=${DB_USER}
       - CERBERUS_DB_PASSWORD=${DB_PASSWORD}
+      - EMAIL_VERIFIER_API=${EMAIL_VERIFIER_API}
+      - JWT_ISS=${JWT_ISS}
+      - JWT_AUD=${JWT_AUD}
+      - MESSENGER_ENDPOINT=${MESSENGER_ENDPOINT}
+      - CERBERUS_SECRET=${CERBERUS_SECRET}
+      - KEYS_DIR=${KEYS_DIR:-/keys}
+      - ACTIVE_KID_FILE=${ACTIVE_KID_FILE:-/keys/active_kid.txt}
     networks:
       - Prodigy
   hermes:
@@ -35,3 +42,28 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+      - MESSAGE_MAX_ATTEMPTS=${MESSAGE_MAX_ATTEMPTS:-5}
+      - HERMES_SECRET=${HERMES_SECRET}
+
+  charon:
+    build:
+      context: .
+      dockerfile: Charon
+    container_name: Charon
+    restart: unless-stopped
+    ports:
+      - "5002:5000"
+    environment:
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MESSAGE_MAX_ATTEMPTS=${MESSAGE_MAX_ATTEMPTS:-5}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_API_BASE=${TELEGRAM_API_BASE:-https://api.telegram.org}
+      - EMAIL_API_URL=${EMAIL_API_URL}
+      - EMAIL_API_KEY=${EMAIL_API_KEY}
+      - EMAIL_SENDERS_URL=${EMAIL_SENDERS_URL}
+    networks:
+      - Prodigy
