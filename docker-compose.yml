@@ -12,11 +12,11 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - CERBERUS_DB_HOST=${DB_HOST:-localhost}
-      - CERBERUS_DB_PORT=${DB_PORT:-5432}
-      - CERBERUS_DB_NAME=${DB_NAME}
-      - CERBERUS_DB_USER=${DB_USER}
-      - CERBERUS_DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - EMAIL_VERIFIER_API=${EMAIL_VERIFIER_API}
       - JWT_ISS=${JWT_ISS}
       - JWT_AUD=${JWT_AUD}
