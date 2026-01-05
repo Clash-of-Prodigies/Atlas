@@ -69,3 +69,21 @@ services:
       - EMAIL_SENDERS_URL=${EMAIL_SENDERS_URL}
     networks:
       - Prodigy
+
+  shadow:
+    build:
+      context: .
+      dockerfile: Shadow
+    container_name: Shadow
+    restart: unless-stopped
+    ports:
+      - "5003:5000"
+    environment:
+      - SHADOW_SECRET=${SHADOW_SECRET}
+      - DB_HOST=${DB_HOST:-localhost}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    networks:
+      - Prodigy
